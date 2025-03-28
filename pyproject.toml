@@ -1,6 +1,6 @@
 [project]
 name = "acquisition_io"
-version = "0.1.1"
+version = "0.1.2"
 description = "A library for loading microscopy data as xarray datasets"
 requires-python = ">=3.11"
 dependencies = [
