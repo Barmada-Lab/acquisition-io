@@ -7,11 +7,6 @@ from typing import TypeVar
 
 import xarray as xr
 
-from acquisition_io.loaders.cq1_loader import load_cq1
-from acquisition_io.loaders.legacy_loader import load_legacy, load_legacy_icc
-from acquisition_io.loaders.lux_loader import load_lux
-from acquisition_io.loaders.nd2_loader import load_nd2_collection
-
 T = TypeVar("T", xr.DataArray, xr.Dataset)
 
 
@@ -31,14 +26,24 @@ def load_experiment(
 
     match experiment_type:
         case ExperimentType.LEGACY:
+            from acquisition_io.loaders.legacy_loader import load_legacy
+
             return load_legacy(path, fillna)
         case ExperimentType.LEGACY_ICC:
+            from acquisition_io.loaders.legacy_loader import load_legacy_icc
+
             return load_legacy_icc(path, fillna)
         case ExperimentType.ND2:
+            from acquisition_io.loaders.nd2_loader import load_nd2_collection
+
             return load_nd2_collection(path)
         case ExperimentType.LUX:
+            from acquisition_io.loaders.lux_loader import load_lux
+
             return load_lux(path, fillna)
         case ExperimentType.CQ1:
+            from acquisition_io.loaders.cq1_loader import load_cq1
+
             return load_cq1(path)
 
 
