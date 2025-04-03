@@ -1,10 +1,14 @@
 import logging
 import pathlib as pl
+import random
+from collections.abc import Generator
+from itertools import product
 
 import dask
 import dask.array as da
 import numpy as np
 import tifffile
+import xarray as xr
 from skimage import transform  # type: ignore
 
 logger = logging.getLogger(__name__)
@@ -63,3 +67,21 @@ def get_float_color(channel: str):
         return _get_float_color(_float_colors[channel])
     else:
         raise ValueError(f"Channel {channel} is not known")
+
+
+def iter_idx_prod[T: xr.DataArray](
+    arr: T, subarr_dims=None, shuffle=False
+) -> Generator[T, None, None]:
+    """
+    Iterates over the product of an array's indices. Can be used to iterate over
+    all the (coordinate-less) XY(Z) planes in an experiment.
+    """
+    if subarr_dims is None:
+        subarr_dims = []
+    indices = [name for name in arr.indexes if name not in subarr_dims]
+    idxs = list(product(*[arr.indexes[name] for name in indices]))
+    if shuffle:
+        random.shuffle(idxs)
+    for coords in idxs:
+        selector = dict(zip(indices, coords, strict=False))
+        yield arr.sel(selector)
