@@ -69,7 +69,7 @@ def get_float_color(channel: str):
         raise ValueError(f"Channel {channel} is not known")
 
 
-def iter_idx_prod[T: xr.DataArray](
+def iter_idx_prod[T: xr.DataArray | xr.Dataset](
     arr: T, subarr_dims=None, shuffle=False
 ) -> Generator[T, None, None]:
     """
